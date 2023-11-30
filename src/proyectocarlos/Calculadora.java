@@ -79,6 +79,11 @@ public class Calculadora extends javax.swing.JFrame {
 
         txtPinos.setEditable(false);
         txtPinos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtPinos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPinosActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -169,11 +174,12 @@ public class Calculadora extends javax.swing.JFrame {
                     .addComponent(txtArbolE)
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPinos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(btnReset))
-                .addGap(86, 86, 86))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(btnReset))
+                    .addComponent(txtPinos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jLabel4.setFont(new java.awt.Font("Stencil", 1, 24)); // NOI18N
@@ -242,17 +248,17 @@ public class Calculadora extends javax.swing.JFrame {
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
         
-        int a = 0;
-        int pinos = 0;
-        int pinos1 = 0;
-        int t = 0;
+        double a = 0;
+        double pinos = 0;
+        double pinos1 = 0;
+        double t = 0;
         
     if(!txtHectareas.getText().isEmpty()){
         a = Integer.parseInt(txtHectareas.getText());
-       
+      
          if (a > 0) {
             pinos = (a * 1000);
-            t = (int) (pinos*0.1);
+            t = (double) (pinos*0.1);
             pinos1 = (pinos + t);
             txtPinos.setText("" + pinos1);
             txtArbolH.setText(""+pinos);
@@ -274,6 +280,10 @@ public class Calculadora extends javax.swing.JFrame {
         txtArbolH.setText("");
         txtArbolE.setText("");
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void txtPinosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPinosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPinosActionPerformed
 
     /**
      * @param args the command line arguments
