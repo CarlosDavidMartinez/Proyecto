@@ -1,20 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package proyectocarlos;
 
-/**
- *
- * @author 22PROGB18
- */
+package proyectocarlos;
+import java.sql.Statement;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+//import bdjavamysql.conexionMysql;
+import java.sql.PreparedStatement;
 public class RecursosHumanos extends javax.swing.JFrame {
 
-    /**
-     * Creates new form RecursosHumanos
-     */
-    public RecursosHumanos() {
+    conexionMysql con = new  conexionMysql();
+    Connection cn = con.conectar();
+    
+      public RecursosHumanos() {
         initComponents();
+        mostrar();
     }
 
     /**
@@ -27,15 +29,14 @@ public class RecursosHumanos extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbltrabajadores = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -48,15 +49,24 @@ public class RecursosHumanos extends javax.swing.JFrame {
         txtIdTrabajador = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
-        txtAreaTrabajo = new javax.swing.JTextField();
+        txtHorasT = new javax.swing.JTextField();
         txtSueldo = new javax.swing.JTextField();
         btnRegistrar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItem1MouseClicked(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
+        jButton1.setBackground(new java.awt.Color(153, 255, 153));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton1.setText("REGRESAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -65,11 +75,11 @@ public class RecursosHumanos extends javax.swing.JFrame {
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel2.setBackground(new java.awt.Color(153, 255, 204));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("GESTION DE PERSONAL");
+        jLabel8.setForeground(new java.awt.Color(0, 0, 51));
+        jLabel8.setText("GESTIÓN DE PERSONAL");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -88,15 +98,9 @@ public class RecursosHumanos extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setText("PROBAR CONEXION");
-
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton3.setText("MOSTRAR DATOS");
-
         jPanel3.setBackground(new java.awt.Color(0, 102, 102));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbltrabajadores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -107,7 +111,12 @@ public class RecursosHumanos extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tbltrabajadores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbltrabajadoresMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbltrabajadores);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -139,7 +148,7 @@ public class RecursosHumanos extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jPanel5.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel5.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,7 +164,7 @@ public class RecursosHumanos extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Area de Trabajo:");
+        jLabel5.setText("Horas trabajadas:");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -172,15 +181,36 @@ public class RecursosHumanos extends javax.swing.JFrame {
 
         txtTelefono.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
-        txtAreaTrabajo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtHorasT.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
         txtSueldo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
+        btnRegistrar.setBackground(new java.awt.Color(153, 255, 255));
         btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRegistrar.setText("REGISTRAR");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
+        btnEditar.setBackground(new java.awt.Color(153, 255, 255));
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnEditar.setText("EDITAR");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnBorrar.setBackground(new java.awt.Color(153, 255, 255));
+        btnBorrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBorrar.setText("BORRAR");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -189,7 +219,7 @@ public class RecursosHumanos extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(262, 262, 262)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(259, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
@@ -200,24 +230,30 @@ public class RecursosHumanos extends javax.swing.JFrame {
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                     .addComponent(txtTelefono)
                     .addComponent(txtIdTrabajador, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)))
+                .addGap(1, 1, 1)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtAreaTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(txtSueldo)))
+                            .addComponent(txtHorasT, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(txtSueldo))
+                        .addGap(19, 19, 19))
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
                         .addComponent(btnRegistrar)
-                        .addGap(24, 24, 24)
-                        .addComponent(btnEditar)))
-                .addGap(19, 19, 19))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,7 +265,7 @@ public class RecursosHumanos extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel5)
                     .addComponent(txtIdTrabajador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtAreaTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtHorasT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -237,13 +273,20 @@ public class RecursosHumanos extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrar)
-                    .addComponent(btnEditar))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(34, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnEditar)
+                            .addComponent(btnRegistrar)
+                            .addComponent(btnBorrar))
+                        .addGap(18, 18, 18))))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -255,15 +298,11 @@ public class RecursosHumanos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jButton1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -272,11 +311,7 @@ public class RecursosHumanos extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(18, 18, 18)
+                .addGap(46, 46, 46)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -311,6 +346,161 @@ public class RecursosHumanos extends javax.swing.JFrame {
         Menu a = new Menu();
         a.setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    void mostrar(){
+    
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("id_trabajador");
+    modelo.addColumn("nombre");
+    modelo.addColumn("telefono");
+    modelo.addColumn("horas_trabajadas");
+    modelo.addColumn("sueldo");
+    tbltrabajadores.setModel(modelo);
+    String consultasql = "SELECT * FROM trabajadores";
+    String data[] = new String[5];
+    
+    Statement st;
+    
+    try {
+    
+        st = cn.createStatement();
+        ResultSet rs = st.executeQuery(consultasql);
+        
+        while(rs.next()){
+            data[0] = rs.getString(1);
+            data[1] = rs.getString(2);
+            data[2] = rs.getString(3);
+            data[3] = rs.getString(4);
+            data[4] = rs.getString(5);
+            modelo.addRow(data);
+        }
+    
+    }catch (SQLException e){
+    System.out.println("Error"+e);
+    }
+    }
+     void agregar(){
+         
+    if( !txtNombre.getText().isEmpty() && !txtTelefono.getText().isEmpty() && !txtHorasT.getText().isEmpty() && !txtSueldo.getText().isEmpty()){
+        try {
+           PreparedStatement ps = cn.prepareStatement("insert into trabajadores (nombre,telefono,horas_trabajadas,sueldo) VALUES (?,?,?,?)");
+           ps.setString(1, txtNombre.getText());
+           ps.setString(2, txtTelefono.getText());
+           ps.setString(3, txtHorasT.getText());
+           ps.setString(4, txtSueldo.getText());
+           ps.executeUpdate();
+           JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente!");
+           mostrar();
+           txtNombre.setText(" ");
+           txtTelefono.setText(" ");
+           txtHorasT.setText(" ");
+           txtSueldo.setText(" ");
+           }catch(SQLException e){
+
+           JOptionPane.showMessageDialog(rootPane, "Error al registrar contacto!" + e);
+           }
+    }
+    else
+    {
+    JOptionPane.showMessageDialog(this, "Campos vacios...");
+    }
+    
+    }
+     
+     void editar(){
+    
+     try {
+        PreparedStatement ps = cn.prepareStatement("UPDATE trabajadores SET nombre='" + txtNombre.getText() + "', telefono ='" + txtTelefono.getText() + "', horas_trabajadas ='" + txtHorasT.getText()  + "', sueldo ='" + txtSueldo.getText() + "' WHERE id_trabajador=" + Integer.parseInt(txtIdTrabajador.getText()) + "");
+        int indice = ps.executeUpdate();
+        
+        if(indice > 0){
+        JOptionPane.showMessageDialog(rootPane, "Datos actualizados correctamente!" );
+        mostrar(); 
+        }else{
+        JOptionPane.showMessageDialog(rootPane, "No se selecciono una fila!");
+        }
+        }catch (SQLException e){
+        JOptionPane.showMessageDialog(rootPane, "Error al actualizar datos " + e);
+        }
+        txtIdTrabajador.setText(" ");
+        txtNombre.setText(" ");
+        txtHorasT.setText(" ");
+        txtSueldo.setText(" ");
+        txtTelefono.setText("");
+    }
+      void eliminar(){
+      try {
+        PreparedStatement ps = cn.prepareStatement("DELETE FROM trabajadores where id_trabajador='" + txtIdTrabajador.getText()+"'");
+         
+        int indice = ps.executeUpdate();
+        
+        if (indice > 0 ){
+        
+        mostrar();
+            
+        } else {
+                JOptionPane.showMessageDialog(rootPane, "No se selecciono una fila");
+                }
+        
+        } catch (SQLException e) {
+        
+        JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos..."+e); 
+        }
+        txtIdTrabajador.setText(" ");
+        txtNombre.setText(" ");
+        txtSueldo.setText(" ");
+        txtTelefono.setText(" ");
+        txtHorasT.setText("");
+    
+    }
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        eliminar();
+        mostrar();
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        editar();
+        mostrar();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void tbltrabajadoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbltrabajadoresMouseClicked
+       int fila = tbltrabajadores.getSelectedRow();
+        this.txtIdTrabajador.setText(tbltrabajadores.getValueAt(fila,0).toString());
+        this.txtNombre.setText(tbltrabajadores.getValueAt(fila,1).toString());
+        this.txtTelefono.setText(tbltrabajadores.getValueAt(fila,2).toString());
+        this.txtHorasT.setText(tbltrabajadores.getValueAt(fila,3).toString());
+        this.txtSueldo.setText(tbltrabajadores.getValueAt(fila,4).toString());
+    }//GEN-LAST:event_tbltrabajadoresMouseClicked
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+       agregar();
+       mostrar();
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void jMenuItem1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MouseClicked
+       try {
+        PreparedStatement ps = cn.prepareStatement("DELETE FROM trabajadores where id_trabajador='" + txtIdTrabajador.getText()+"'");
+         
+        int indice = ps.executeUpdate();
+        
+        if (indice > 0 ){
+        
+        mostrar();
+            
+        } else {
+                JOptionPane.showMessageDialog(rootPane, "No se selecciono una fila");
+                }
+        
+        } catch (SQLException e) {
+        
+        JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos..."+e); 
+        }
+        txtIdTrabajador.setText(" ");
+        txtNombre.setText(" ");
+        txtSueldo.setText(" ");
+        txtTelefono.setText(" ");
+        txtHorasT.setText("");
+    }//GEN-LAST:event_jMenuItem1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -348,11 +538,10 @@ public class RecursosHumanos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -361,6 +550,7 @@ public class RecursosHumanos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -368,8 +558,8 @@ public class RecursosHumanos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField txtAreaTrabajo;
+    private javax.swing.JTable tbltrabajadores;
+    private javax.swing.JTextField txtHorasT;
     private javax.swing.JTextField txtIdTrabajador;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtSueldo;
